@@ -552,6 +552,43 @@ extension NavigationExtensions on BuildContext {
 - Add meaningful semantic labels
 - Ensure proper focus management
 
+## Git Commit Guidelines
+
+Follow **Conventional Commits** specification: `<type>[scope]: <description>`
+
+### Commit Types
+- **feat**: New feature
+- **fix**: Bug fix  
+- **docs**: Documentation changes
+- **refactor**: Code restructuring without feature/bug changes
+- **perf**: Performance improvements
+- **test**: Test additions/corrections
+- **chore**: Maintenance tasks
+
+### Scopes (Rosetta-specific)
+- **arb**: ARB file operations
+- **editor**: Translation editing interface
+- **project**: Project/workspace management
+- **validation**: Translation validation
+- **export**: File export/import
+- **core**: Core utilities, theme, routing
+- **deps**: Dependency updates
+
+### Examples
+```
+feat(arb): add ARB file parsing with validation
+fix(editor): resolve translation table scrolling issue
+refactor(core): migrate to get_it dependency injection
+docs(validation): add ARB validation rules documentation
+```
+
+### Best Practices
+- Keep subject line under 50 characters
+- Use imperative mood ("Add" not "Added")
+- Include body for complex changes explaining what and why
+- Reference issues: `Closes #123`, `Fixes #456`
+- Use `BREAKING CHANGE:` for breaking changes
+
 When suggesting code changes or new features, always consider:
 1. How it fits into the clean architecture
 2. Bloc pattern implementation with get_it dependency injection
