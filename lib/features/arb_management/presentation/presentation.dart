@@ -4,6 +4,7 @@ export 'bloc/translation_editor_bloc.dart';
 export 'models/validation_issue_info.dart';
 export 'pages/arb_translation_page.dart';
 export 'widgets/arb_file_import_widget.dart';
+export 'widgets/export_dialog_widget.dart';
 export 'widgets/file_tabs_widget.dart';
 export 'widgets/translation_entry_editor_widget.dart';
 export 'widgets/translation_table_widget.dart';

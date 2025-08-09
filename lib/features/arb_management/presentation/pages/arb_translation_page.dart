@@ -11,6 +11,7 @@ import '../../domain/repositories/translation_session_repository.dart'
 import '../bloc/arb_import_bloc.dart';
 import '../bloc/translation_editor_bloc.dart';
 import '../widgets/arb_file_import_widget.dart';
+import '../widgets/export_dialog_widget.dart';
 import '../widgets/translation_table_widget.dart';
 import '../widgets/undo_redo_toolbar_widget.dart';
 import '../widgets/file_tabs_widget.dart';
@@ -28,6 +29,10 @@ class ArbTranslationPage extends StatefulWidget {
 class _ArbTranslationPageState extends State<ArbTranslationPage> {
   final _searchController = TextEditingController();
   bool _showValidationPanel = false;
+
+  // Search state
+  List<SearchResult> _searchResults = [];
+  int _currentSearchIndex = -1;
 
   @override
   void dispose() {
@@ -187,6 +192,7 @@ class _ArbTranslationPageState extends State<ArbTranslationPage> {
                 context.read<TranslationEditorBloc>().add(
                   FilterEntriesEvent(searchTerm: value),
                 );
+                _updateSearchResults(value);
               },
             ),
           ),
@@ -331,17 +337,223 @@ class _ArbTranslationPageState extends State<ArbTranslationPage> {
   }
 
   void _handleExport() {
-    // TODO: Implement export dialog
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Export functionality coming soon')),
+    final state = context.read<TranslationEditorBloc>().state;
+    if (state is! TranslationEditorLoadedState) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No files loaded to export'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => ExportDialogWidget(
+        locales: state.session.locales,
+        onExport: _performExport,
+      ),
     );
   }
 
-  void _handleFindNext() {
-    // TODO: Implement find next functionality
-    if (_searchController.text.isNotEmpty) {
-      // Navigate to next search result
+  Future<void> _performExport(ExportOptions options) async {
+    try {
+      final state = context.read<TranslationEditorBloc>().state;
+      if (state is! TranslationEditorLoadedState) return;
+
+      // Show loading indicator
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
+                const SizedBox(width: 16),
+                Text('Exporting ${options.selectedLocales.length} file(s)...'),
+              ],
+            ),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+
+      final repository = GetIt.instance<ArbFileRepository>();
+
+      // Filter files for selected locales
+      final filesToExport = <String, Map<String, dynamic>>{};
+      for (final locale in options.selectedLocales) {
+        final file = state.session.files[locale];
+        if (file != null) {
+          filesToExport[locale] = file as Map<String, dynamic>;
+        }
+      }
+
+      // Perform export based on format
+      for (final entry in filesToExport.entries) {
+        final locale = entry.key;
+        final file = entry.value;
+
+        // Create output filename
+        final filename = options.preserveStructure
+            ? '${file['metadata']?['context'] ?? 'app'}_$locale.${options.format}'
+            : 'translation_$locale.${options.format}';
+
+        final outputPath = '${options.outputPath}/$filename';
+
+        await repository.exportFile(
+          file as dynamic,
+          outputPath,
+          options.format,
+        );
+      }
+
+      // Create compressed archive if requested
+      if (options.compress && options.format != 'arb') {
+        // TODO: Implement ZIP compression
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Successfully exported ${options.selectedLocales.length} file(s)',
+            ),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Export failed: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
+  }
+
+  void _handleFindNext() {
+    if (_searchResults.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('No search results found'),
+          duration: Duration(seconds: 1),
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      _currentSearchIndex = (_currentSearchIndex + 1) % _searchResults.length;
+    });
+
+    final result = _searchResults[_currentSearchIndex];
+
+    // Navigate to the entry
+    context.read<TranslationEditorBloc>().add(
+      SelectEntryEvent(fileLocale: result.locale, entryKey: result.entryKey),
+    );
+
+    // Show current position
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Result ${_currentSearchIndex + 1} of ${_searchResults.length}: ${result.entryKey}',
+        ),
+        duration: const Duration(seconds: 1),
+      ),
+    );
+  }
+
+  void _updateSearchResults(String searchTerm) {
+    if (searchTerm.isEmpty) {
+      setState(() {
+        _searchResults.clear();
+        _currentSearchIndex = -1;
+      });
+      return;
+    }
+
+    final state = context.read<TranslationEditorBloc>().state;
+    if (state is! TranslationEditorLoadedState) return;
+
+    final results = <SearchResult>[];
+    final lowerSearchTerm = searchTerm.toLowerCase();
+
+    // Search through all files and entries
+    for (final fileEntry in state.session.files.entries) {
+      final locale = fileEntry.key;
+      final file = fileEntry.value;
+
+      for (final entry in file.entries.values) {
+        bool matches = false;
+        String matchType = '';
+
+        // Search in key
+        if (entry.key.toLowerCase().contains(lowerSearchTerm)) {
+          matches = true;
+          matchType = 'key';
+        }
+        // Search in value
+        else if (entry.value.toLowerCase().contains(lowerSearchTerm)) {
+          matches = true;
+          matchType = 'value';
+        }
+        // Search in description
+        else if (entry.metadata?.description?.toLowerCase().contains(
+              lowerSearchTerm,
+            ) ??
+            false) {
+          matches = true;
+          matchType = 'description';
+        }
+
+        if (matches) {
+          results.add(
+            SearchResult(
+              locale: locale,
+              entryKey: entry.key,
+              matchType: matchType,
+              preview: _createPreview(entry, lowerSearchTerm),
+            ),
+          );
+        }
+      }
+    }
+
+    setState(() {
+      _searchResults = results;
+      _currentSearchIndex = results.isNotEmpty ? 0 : -1;
+    });
+  }
+
+  String _createPreview(dynamic entry, String searchTerm) {
+    // Create a preview showing where the match was found
+    final maxLength = 50;
+    String text = entry.value as String;
+
+    final index = text.toLowerCase().indexOf(searchTerm);
+    if (index == -1) {
+      return text.length > maxLength
+          ? '${text.substring(0, maxLength)}...'
+          : text;
+    }
+
+    final start = (index - 20).clamp(0, text.length);
+    final end = (index + searchTerm.length + 20).clamp(0, text.length);
+
+    String preview = text.substring(start, end);
+    if (start > 0) preview = '...$preview';
+    if (end < text.length) preview = '$preview...';
+
+    return preview;
   }
 
   String _formatDuration(Duration duration) {
@@ -357,4 +569,19 @@ class _ArbTranslationPageState extends State<ArbTranslationPage> {
       return '${seconds}s';
     }
   }
+}
+
+/// Search result for find functionality
+class SearchResult {
+  const SearchResult({
+    required this.locale,
+    required this.entryKey,
+    required this.matchType,
+    required this.preview,
+  });
+
+  final String locale;
+  final String entryKey;
+  final String matchType;
+  final String preview;
 }

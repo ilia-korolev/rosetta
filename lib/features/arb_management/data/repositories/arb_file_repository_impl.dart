@@ -1,3 +1,7 @@
+import 'dart:io';
+import 'package:path/path.dart' as path;
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../domain/entities/arb_file.dart';
 import '../../domain/entities/validation_result.dart';
 import '../../domain/repositories/arb_file_repository.dart';
@@ -8,6 +12,9 @@ class ArbFileRepositoryImpl implements ArbFileRepository {
   const ArbFileRepositoryImpl(this._dataSource);
 
   final ArbFileDataSource _dataSource;
+
+  static const String _recentFilesKey = 'recent_arb_files';
+  static const int _maxRecentFiles = 10;
 
   @override
   Future<ArbFile> importFromFile(String filePath) async {
@@ -67,17 +74,69 @@ class ArbFileRepositoryImpl implements ArbFileRepository {
 
   @override
   Future<List<String>> getRecentFiles() async {
-    // TODO: Implement recent files storage (SharedPreferences, etc.)
-    return <String>[];
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final recentFiles = prefs.getStringList(_recentFilesKey) ?? <String>[];
+
+      // Filter out files that no longer exist
+      final existingFiles = <String>[];
+      for (final filePath in recentFiles) {
+        if (await File(filePath).exists()) {
+          existingFiles.add(filePath);
+        }
+      }
+
+      // Update preferences if some files were removed
+      if (existingFiles.length != recentFiles.length) {
+        await prefs.setStringList(_recentFilesKey, existingFiles);
+      }
+
+      return existingFiles;
+    } catch (e) {
+      return <String>[];
+    }
   }
 
   @override
   Future<void> addToRecentFiles(String filePath) async {
-    // TODO: Implement recent files storage
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final recentFiles = prefs.getStringList(_recentFilesKey) ?? <String>[];
+
+      // Remove if already exists to avoid duplicates
+      recentFiles.remove(filePath);
+
+      // Add to the beginning
+      recentFiles.insert(0, filePath);
+
+      // Keep only the maximum number of recent files
+      if (recentFiles.length > _maxRecentFiles) {
+        recentFiles.removeRange(_maxRecentFiles, recentFiles.length);
+      }
+
+      await prefs.setStringList(_recentFilesKey, recentFiles);
+    } catch (e) {
+      // Ignore errors when saving recent files
+    }
   }
 
   @override
   Future<void> createBackup(String filePath) async {
-    // TODO: Implement backup creation
+    try {
+      final file = File(filePath);
+      if (!await file.exists()) return;
+
+      final fileDir = file.parent;
+      final fileName = path.basenameWithoutExtension(file.path);
+      final fileExtension = path.extension(file.path);
+      final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-');
+
+      final backupFileName = '${fileName}_backup_$timestamp$fileExtension';
+      final backupPath = path.join(fileDir.path, backupFileName);
+
+      await file.copy(backupPath);
+    } catch (e) {
+      // Ignore backup errors - they shouldn't prevent normal operation
+    }
   }
 }
