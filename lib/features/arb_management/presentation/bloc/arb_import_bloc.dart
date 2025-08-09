@@ -2,7 +2,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/arb_file.dart';
-import '../../domain/repositories/arb_file_repository.dart';
+import '../../domain/entities/validation_result.dart';
 import '../../domain/use_cases/import_arb_file_use_case.dart';
 
 part 'arb_import_bloc.mapper.dart';

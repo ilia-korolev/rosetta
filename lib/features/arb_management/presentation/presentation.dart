@@ -1,6 +1,7 @@
 // Presentation layer barrel export
 export 'bloc/arb_import_bloc.dart';
 export 'bloc/translation_editor_bloc.dart';
+export 'models/validation_issue_info.dart';
 export 'pages/arb_translation_page.dart';
 export 'widgets/arb_file_import_widget.dart';
 export 'widgets/file_tabs_widget.dart';

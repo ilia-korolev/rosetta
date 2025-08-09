@@ -1,4 +1,8 @@
 import '../entities/arb_entry.dart';
+import '../entities/arb_entry_metadata.dart';
+import '../entities/arb_entry_type.dart';
+import '../entities/arb_placeholder.dart';
+import '../entities/icu_case.dart';
 
 /// Use case for parsing ICU message format
 class ParseIcuMessageUseCase {

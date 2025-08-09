@@ -1,4 +1,5 @@
 import '../../domain/entities/arb_file.dart';
+import '../../domain/entities/validation_result.dart';
 import '../../domain/repositories/arb_file_repository.dart';
 import '../data_sources/arb_file_data_source.dart';
 

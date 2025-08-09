@@ -4,7 +4,10 @@ import 'package:path/path.dart' as path;
 
 import '../../domain/entities/arb_file.dart';
 import '../../domain/entities/arb_entry.dart';
-import '../../domain/repositories/arb_file_repository.dart';
+import '../../domain/entities/validation_error.dart';
+import '../../domain/entities/validation_result.dart';
+import '../../domain/entities/validation_suggestion.dart';
+import '../../domain/entities/validation_warning.dart';
 import '../dtos/arb_file_dto.dart';
 
 /// Data source for ARB file operations

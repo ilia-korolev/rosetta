@@ -1,5 +1,12 @@
 import '../entities/arb_entry.dart';
-import '../repositories/arb_file_repository.dart';
+import '../entities/arb_entry_type.dart';
+import '../entities/arb_placeholder.dart';
+import '../entities/icu_case.dart';
+import '../entities/icu_validation_result.dart';
+import '../entities/validation_error.dart';
+
+import '../entities/validation_suggestion.dart';
+import '../entities/validation_warning.dart';
 
 /// Use case for validating ICU message format syntax
 class ValidateIcuSyntaxUseCase {
@@ -545,39 +552,5 @@ class ValidateIcuSyntaxUseCase {
     }
 
     return cases;
-  }
-}
-
-/// Result of ICU syntax validation
-class IcuValidationResult extends ValidationResult {
-  const IcuValidationResult({
-    required super.isValid,
-    required this.entry,
-    super.errors = const [],
-    super.warnings = const [],
-    super.suggestions = const [],
-  });
-
-  /// The ARB entry that was validated
-  final ArbEntry entry;
-
-  /// Whether the entry can be safely used
-  bool get canBeUsed => !hasCriticalIssues;
-
-  /// Get issues specific to ICU syntax
-  List<ValidationError> get icuSyntaxErrors {
-    return errors
-        .where(
-          (e) =>
-              e.code.startsWith('INVALID_') ||
-              e.code.startsWith('MISSING_') ||
-              e.code.startsWith('UNMATCHED_'),
-        )
-        .toList();
-  }
-
-  /// Get placeholder-related issues
-  List<ValidationError> get placeholderErrors {
-    return errors.where((e) => e.code.contains('PLACEHOLDER')).toList();
   }
 }

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/arb_entry.dart';
+import '../../domain/entities/arb_entry_type.dart';
+import '../../domain/entities/arb_placeholder.dart';
+import '../../domain/entities/icu_case.dart';
 import '../bloc/translation_editor_bloc.dart';
 
 /// Widget for editing individual translation entries with ICU support

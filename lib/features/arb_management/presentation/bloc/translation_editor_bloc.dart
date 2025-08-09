@@ -2,7 +2,9 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/arb_entry.dart';
+import '../../domain/entities/arb_entry_type.dart';
 import '../../domain/entities/arb_file.dart';
+import '../../domain/entities/icu_validation_result.dart';
 import '../../domain/entities/translation_session.dart';
 import '../../domain/repositories/arb_file_repository.dart';
 import '../../domain/repositories/translation_session_repository.dart'

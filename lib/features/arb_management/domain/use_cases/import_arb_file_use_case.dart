@@ -1,4 +1,5 @@
 import '../entities/arb_file.dart';
+import '../entities/validation_result.dart';
 import '../repositories/arb_file_repository.dart';
 
 /// Use case for importing ARB files

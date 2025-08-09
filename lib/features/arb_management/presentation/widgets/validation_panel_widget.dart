@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/translation_editor_bloc.dart';
+import '../models/validation_issue_info.dart';
 
 /// Widget that displays validation results and issues
 class ValidationPanelWidget extends StatelessWidget {
@@ -202,25 +203,6 @@ class ValidationPanelWidget extends StatelessWidget {
       SelectEntryEvent(fileLocale: issue.fileLocale, entryKey: issue.entryKey),
     );
   }
-}
-
-/// Information about a validation issue
-class ValidationIssueInfo {
-  const ValidationIssueInfo({
-    required this.fileLocale,
-    required this.entryKey,
-    required this.message,
-    required this.code,
-    required this.isError,
-    this.suggestion,
-  });
-
-  final String fileLocale;
-  final String entryKey;
-  final String message;
-  final String code;
-  final bool isError;
-  final String? suggestion;
 }
 
 /// Card widget for displaying a validation issue

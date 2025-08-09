@@ -1,104 +1,11 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
+import 'arb_entry_metadata.dart';
+import 'arb_entry_type.dart';
+import 'arb_placeholder.dart';
+import 'icu_case.dart';
+
 part 'arb_entry.mapper.dart';
-
-/// Types of ARB entries based on ICU message format
-@MappableEnum()
-enum ArbEntryType {
-  simple, // "hello": "Hello"
-  plural, // ICU plural syntax
-  select, // ICU select syntax
-  compound, // Mixed plural/select
-  withPlaceholders, // Simple with {variables}
-  withDateFormat, // DateTime formatting
-  withNumberFormat, // Number/currency formatting
-}
-
-/// Types of placeholders in ARB entries
-@MappableEnum()
-enum PlaceholderType {
-  string('String'),
-  int('int'),
-  double('double'),
-  num('num'),
-  dateTime('DateTime');
-
-  const PlaceholderType(this.typeName);
-  final String typeName;
-}
-
-/// A placeholder within an ARB message
-@MappableClass()
-class ArbPlaceholder with ArbPlaceholderMappable {
-  const ArbPlaceholder({
-    required this.name,
-    required this.type,
-    this.format,
-    this.optionalParameters,
-    this.example,
-    this.description,
-  });
-
-  /// Placeholder name (e.g., "count", "gender", "date")
-  final String name;
-
-  /// Type of the placeholder
-  final PlaceholderType type;
-
-  /// Format specification (e.g., "compact", "currency", "yMd")
-  final String? format;
-
-  /// Optional parameters for formatting (e.g., {"decimalDigits": 2})
-  final Map<String, dynamic>? optionalParameters;
-
-  /// Example value for testing/preview
-  final String? example;
-
-  /// Description for translators
-  final String? description;
-}
-
-/// A case in a plural or select ICU message
-@MappableClass()
-class IcuCase with IcuCaseMappable {
-  const IcuCase({
-    required this.selector,
-    required this.message,
-    required this.isRequired,
-  });
-
-  /// The selector (e.g., "=0", "=1", "other", "male", "female")
-  final String selector;
-
-  /// The message for this case
-  final String message;
-
-  /// Whether this case is required (e.g., "other" is always required)
-  final bool isRequired;
-}
-
-/// Metadata for an ARB entry
-@MappableClass()
-class ArbEntryMetadata with ArbEntryMetadataMappable {
-  const ArbEntryMetadata({
-    this.description,
-    this.context,
-    this.examples,
-    this.translatorNotes,
-  });
-
-  /// Description of the entry for translators
-  final String? description;
-
-  /// Context where this entry is used
-  final String? context;
-
-  /// Examples of usage
-  final List<String>? examples;
-
-  /// Additional notes for translators
-  final String? translatorNotes;
-}
 
 /// An entry in an ARB file
 @MappableClass()
