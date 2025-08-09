@@ -15,21 +15,14 @@ class TranslationSessionRepositoryImpl implements TranslationSessionRepository {
   @override
   Future<void> saveSession(TranslationSession session) async {
     final dto = session.toDto();
-    await _sessionStorageDataSource.saveSessionJson(
-      session.sessionId,
-      dto.toMap(),
-    );
+    await _sessionStorageDataSource.saveSession(dto);
   }
 
   @override
   Future<TranslationSession?> loadSession(String sessionId) async {
     try {
-      final sessionData = await _sessionStorageDataSource.loadSessionJson(
-        sessionId,
-      );
-      if (sessionData == null) return null;
-
-      final dto = TranslationSessionDtoMapper.fromMap(sessionData);
+      final dto = await _sessionStorageDataSource.loadSession(sessionId);
+      if (dto == null) return null;
       return dto.toDomain();
     } catch (e) {
       return null;
@@ -68,8 +61,8 @@ class TranslationSessionRepositoryImpl implements TranslationSessionRepository {
   Future<void> autoSaveSession(TranslationSession session) async {
     // Create a copy with updated auto-save timestamp
     final updatedSession = session.copyWith(lastAutoSave: DateTime.now());
-
-    await saveSession(updatedSession);
+    final dto = updatedSession.toDto();
+    await _sessionStorageDataSource.saveSession(dto);
   }
 
   @override
