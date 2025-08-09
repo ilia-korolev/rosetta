@@ -1,14 +1,16 @@
-import 'dart:io';
-import 'package:path/path.dart' as path;
-
 import 'package:rosetta/features/features.dart';
 
 /// Implementation of ARB file repository
 class ArbFileRepositoryImpl implements ArbFileRepository {
-  const ArbFileRepositoryImpl(this._dataSource, this._recentFilesDataSource);
+  const ArbFileRepositoryImpl(
+    this._dataSource,
+    this._recentFilesDataSource,
+    this._backupDataSource,
+  );
 
   final ArbFileDataSource _dataSource;
   final RecentFilesDataSource _recentFilesDataSource;
+  final BackupDataSource _backupDataSource;
 
   @override
   Future<ArbFile> importFromFile(String filePath) async {
@@ -78,21 +80,6 @@ class ArbFileRepositoryImpl implements ArbFileRepository {
 
   @override
   Future<void> createBackup(String filePath) async {
-    try {
-      final file = File(filePath);
-      if (!await file.exists()) return;
-
-      final fileDir = file.parent;
-      final fileName = path.basenameWithoutExtension(file.path);
-      final fileExtension = path.extension(file.path);
-      final timestamp = DateTime.now().toIso8601String().replaceAll(':', '-');
-
-      final backupFileName = '${fileName}_backup_$timestamp$fileExtension';
-      final backupPath = path.join(fileDir.path, backupFileName);
-
-      await file.copy(backupPath);
-    } catch (e) {
-      // Ignore backup errors - they shouldn't prevent normal operation
-    }
+    await _backupDataSource.createBackup(filePath);
   }
 }

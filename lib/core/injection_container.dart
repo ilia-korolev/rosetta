@@ -12,6 +12,14 @@ Future<void> initializeDependencies() async {
     () => const SharedPreferencesDataSource(),
   );
 
+  // File/data sources
+  getIt.registerLazySingleton<SessionStorageDataSource>(
+    () => const SessionStorageDataSourceImpl(),
+  );
+  getIt.registerLazySingleton<BackupDataSource>(
+    () => const BackupDataSourceImpl(),
+  );
+
   // Feature data sources
   getIt.registerLazySingleton<ArbFileDataSource>(
     () => const ArbFileDataSource(),
@@ -27,11 +35,18 @@ Future<void> initializeDependencies() async {
 
   // Repositories
   getIt.registerLazySingleton<ArbFileRepository>(
-    () => ArbFileRepositoryImpl(getIt(), getIt()),
+    () => ArbFileRepositoryImpl(
+      getIt<ArbFileDataSource>(),
+      getIt<RecentFilesDataSource>(),
+      getIt<BackupDataSource>(),
+    ),
   );
 
   getIt.registerLazySingleton<TranslationSessionRepository>(
-    () => TranslationSessionRepositoryImpl(getIt()),
+    () => TranslationSessionRepositoryImpl(
+      getIt<AutoSavePreferencesDataSource>(),
+      getIt<SessionStorageDataSource>(),
+    ),
   );
 
   // Use cases

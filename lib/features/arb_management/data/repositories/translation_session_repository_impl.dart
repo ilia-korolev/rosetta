@@ -1,86 +1,36 @@
-import 'dart:convert';
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
-
 import 'package:rosetta/features/features.dart';
 
 /// Implementation of translation session repository
 class TranslationSessionRepositoryImpl implements TranslationSessionRepository {
-  const TranslationSessionRepositoryImpl(this._autoSavePreferencesDataSource);
+  const TranslationSessionRepositoryImpl(
+    this._autoSavePreferencesDataSource,
+    this._sessionStorageDataSource,
+  );
 
   final AutoSavePreferencesDataSource _autoSavePreferencesDataSource;
+  final SessionStorageDataSource _sessionStorageDataSource;
 
   static const Duration _defaultAutoSaveInterval = Duration(minutes: 5);
 
   @override
   Future<void> saveSession(TranslationSession session) async {
-    final sessionsDir = await _getSessionsDirectory();
-    final sessionFile = File(
-      path.join(sessionsDir.path, '${session.sessionId}.json'),
-    );
-
-    // Convert session to JSON with full serialization
-    final sessionData = {
-      'sessionId': session.sessionId,
-      'createdAt': session.createdAt.toIso8601String(),
-      'state': session.state.name,
-      'currentFileLocale': session.currentFileLocale,
-      'selectedEntryKey': session.selectedEntryKey,
-      'hasUnsavedChanges': session.hasUnsavedChanges,
-      'lastAutoSave': session.lastAutoSave?.toIso8601String(),
-
-      'files': _serializeFiles(session.files),
-      'changes': _serializeChanges(session.changes),
-      'undoStack': _serializeChanges(session.undoStack),
-      'redoStack': _serializeChanges(session.redoStack),
-    };
-
-    await sessionFile.writeAsString(
-      const JsonEncoder.withIndent('  ').convert(sessionData),
+    final dto = session.toDto();
+    await _sessionStorageDataSource.saveSessionJson(
+      session.sessionId,
+      dto.toMap(),
     );
   }
 
   @override
   Future<TranslationSession?> loadSession(String sessionId) async {
     try {
-      final sessionsDir = await _getSessionsDirectory();
-      final sessionFile = File(path.join(sessionsDir.path, '$sessionId.json'));
-
-      if (!await sessionFile.exists()) {
-        return null;
-      }
-
-      final sessionData =
-          jsonDecode(await sessionFile.readAsString()) as Map<String, dynamic>;
-
-      return TranslationSession(
-        sessionId: sessionData['sessionId'] as String,
-        createdAt: DateTime.parse(sessionData['createdAt'] as String),
-        state: SessionState.values.firstWhere(
-          (state) => state.name == sessionData['state'],
-          orElse: () => SessionState.idle,
-        ),
-        currentFileLocale: sessionData['currentFileLocale'] as String?,
-        selectedEntryKey: sessionData['selectedEntryKey'] as String?,
-        hasUnsavedChanges: sessionData['hasUnsavedChanges'] as bool? ?? false,
-        lastAutoSave: sessionData['lastAutoSave'] != null
-            ? DateTime.parse(sessionData['lastAutoSave'] as String)
-            : null,
-
-        files: _deserializeFiles(
-          sessionData['files'] as Map<String, dynamic>? ?? {},
-        ),
-        changes: _deserializeChanges(
-          sessionData['changes'] as List<dynamic>? ?? [],
-        ),
-        undoStack: _deserializeChanges(
-          sessionData['undoStack'] as List<dynamic>? ?? [],
-        ),
-        redoStack: _deserializeChanges(
-          sessionData['redoStack'] as List<dynamic>? ?? [],
-        ),
+      final sessionData = await _sessionStorageDataSource.loadSessionJson(
+        sessionId,
       );
+      if (sessionData == null) return null;
+
+      final dto = TranslationSessionDtoMapper.fromMap(sessionData);
+      return dto.toDomain();
     } catch (e) {
       return null;
     }
@@ -89,26 +39,11 @@ class TranslationSessionRepositoryImpl implements TranslationSessionRepository {
   @override
   Future<List<TranslationSession>> getAllSessions() async {
     try {
-      final sessionsDir = await _getSessionsDirectory();
-      final sessionFiles = sessionsDir
-          .listSync()
-          .whereType<File>()
-          .where((file) => file.path.endsWith('.json'))
-          .toList();
-
+      final ids = await _sessionStorageDataSource.listSessionIds();
       final sessions = <TranslationSession>[];
-
-      for (final file in sessionFiles) {
-        try {
-          final sessionId = path.basenameWithoutExtension(file.path);
-          final session = await loadSession(sessionId);
-          if (session != null) {
-            sessions.add(session);
-          }
-        } catch (e) {
-          // Skip invalid session files
-          continue;
-        }
+      for (final id in ids) {
+        final session = await loadSession(id);
+        if (session != null) sessions.add(session);
       }
 
       // Sort by creation date (most recent first)
@@ -123,12 +58,7 @@ class TranslationSessionRepositoryImpl implements TranslationSessionRepository {
   @override
   Future<void> deleteSession(String sessionId) async {
     try {
-      final sessionsDir = await _getSessionsDirectory();
-      final sessionFile = File(path.join(sessionsDir.path, '$sessionId.json'));
-
-      if (await sessionFile.exists()) {
-        await sessionFile.delete();
-      }
+      await _sessionStorageDataSource.deleteSession(sessionId);
     } catch (e) {
       // Ignore errors when deleting
     }
@@ -166,69 +96,5 @@ class TranslationSessionRepositoryImpl implements TranslationSessionRepository {
     await _autoSavePreferencesDataSource.setAutoSaveIntervalMinutes(
       interval.inMinutes,
     );
-  }
-
-  /// Serialize files map to JSON
-  Map<String, dynamic> _serializeFiles(Map<String, ArbFile> files) {
-    final result = <String, dynamic>{};
-    for (final entry in files.entries) {
-      result[entry.key] = ArbFileDto.fromDomain(entry.value).toJson();
-    }
-    return result;
-  }
-
-  /// Deserialize files map from JSON
-  Map<String, ArbFile> _deserializeFiles(Map<String, dynamic> filesJson) {
-    final result = <String, ArbFile>{};
-    for (final entry in filesJson.entries) {
-      try {
-        final dto = ArbFileDtoMapper.fromMap(
-          entry.value as Map<String, dynamic>,
-        );
-        result[entry.key] = dto.toDomain();
-      } catch (e) {
-        // Skip invalid file entries
-        continue;
-      }
-    }
-    return result;
-  }
-
-  /// Serialize translation changes to JSON
-  List<Map<String, dynamic>> _serializeChanges(
-    List<TranslationChange> changes,
-  ) {
-    return changes.map((change) => change.toMap()).toList();
-  }
-
-  /// Deserialize translation changes from JSON
-  List<TranslationChange> _deserializeChanges(List<dynamic> changesJson) {
-    final result = <TranslationChange>[];
-    for (final changeJson in changesJson) {
-      try {
-        final change = TranslationChangeMapper.fromMap(
-          changeJson as Map<String, dynamic>,
-        );
-        result.add(change);
-      } catch (e) {
-        // Skip invalid change entries
-        continue;
-      }
-    }
-    return result;
-  }
-
-  /// Get the directory for storing session files
-  Future<Directory> _getSessionsDirectory() async {
-    final appDir = await getApplicationDocumentsDirectory();
-    final sessionsDir = Directory(
-      path.join(appDir.path, 'rosetta', 'sessions'),
-    );
-
-    if (!await sessionsDir.exists()) {
-      await sessionsDir.create(recursive: true);
-    }
-
-    return sessionsDir;
   }
 }
