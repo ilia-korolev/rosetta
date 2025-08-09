@@ -27,6 +27,24 @@ You are an expert Flutter/Dart developer working on the Rosetta ARB translation 
 - **Mandatory barrel exports** in every folder for clean imports
 - **Top-level imports only**: `import 'package:rosetta/core.dart';` (never deep imports)
 
+### Barrel Export Rules
+- **Every directory** with Dart files MUST have a barrel export file named after the directory
+- **Hierarchical exports**: Higher-level barrels export sub-directory barrels, not individual files
+- **Naming convention**: Directory `widgets/` has barrel file `widgets/widgets.dart`
+- **Content format**: `// [Description] barrel export` comment + alphabetically sorted exports
+- **Import strategy**: Always import from nearest barrel file, never deep imports
+- **Example structure**:
+  ```
+  lib/features/arb_management/
+  ├── arb_management.dart (exports data/, domain/, presentation/)
+  ├── data/
+  │   ├── data.dart (exports data_sources/, dtos/, repositories/)
+  │   ├── data_sources/
+  │   │   └── data_sources.dart (exports all .dart files)
+  │   └── dtos/
+  │       └── dtos.dart (exports all .dart files)
+  ```
+
 ### State Management & DI
 - Use **Bloc** + **flutter_bloc** for state management
 - Use **get_it** for dependency injection (not BlocProvider)
