@@ -54,6 +54,11 @@ alwaysApply: true
 - Use `///` for public members, focus on "why" not "what"
 - Keep documentation current with code changes
 
+## AI Assistant Guidelines
+- **ALWAYS identify the current AI model** in responses when providing assistance
+- Include model information in the format: "**AI Model**: [Model Name]" at the end of responses
+- This helps maintain transparency and context for the development team
+
 ## Quality Assurance
 - **Error Handling**: Graceful file operation errors, meaningful messages, retry mechanisms, user-friendly recovery
 - **Security**: Validate file inputs, handle untrusted ARB files safely, sanitize user inputs
