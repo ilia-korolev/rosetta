@@ -9,13 +9,15 @@ class TranslationEntryEditorWidget extends StatefulWidget {
   const TranslationEntryEditorWidget({super.key});
 
   @override
-  State<TranslationEntryEditorWidget> createState() => _TranslationEntryEditorWidgetState();
+  State<TranslationEntryEditorWidget> createState() =>
+      _TranslationEntryEditorWidgetState();
 }
 
-class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWidget> {
+class _TranslationEntryEditorWidgetState
+    extends State<TranslationEntryEditorWidget> {
   late TextEditingController _valueController;
   late TextEditingController _descriptionController;
-  
+
   ArbEntry? _currentEntry;
 
   @override
@@ -41,13 +43,15 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
           if (selectedEntry != _currentEntry) {
             _currentEntry = selectedEntry;
             _valueController.text = selectedEntry?.value ?? '';
-            _descriptionController.text = selectedEntry?.metadata?.description ?? '';
+            _descriptionController.text =
+                selectedEntry?.metadata?.description ?? '';
           }
         }
       },
       child: BlocBuilder<TranslationEditorBloc, TranslationEditorState>(
         builder: (context, state) {
-          if (state is! TranslationEditorLoadedState || state.selectedEntry == null) {
+          if (state is! TranslationEditorLoadedState ||
+              state.selectedEntry == null) {
             return const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -117,7 +121,7 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
 
   Widget _buildEntryHeader(BuildContext context, ArbEntry entry) {
     final theme = Theme.of(context);
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -153,13 +157,18 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
               const SizedBox(height: 8),
               Wrap(
                 spacing: 4,
-                children: entry.placeholderNames.map((name) => 
-                  Chip(
-                    label: Text('{$name}', style: const TextStyle(fontSize: 10)),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                  ),
-                ).toList(),
+                children: entry.placeholderNames
+                    .map(
+                      (name) => Chip(
+                        label: Text(
+                          '{$name}',
+                          style: const TextStyle(fontSize: 10),
+                        ),
+                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    )
+                    .toList(),
               ),
             ],
           ],
@@ -168,10 +177,14 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
     );
   }
 
-  Widget _buildValueEditor(BuildContext context, ArbEntry entry, dynamic validationResult) {
+  Widget _buildValueEditor(
+    BuildContext context,
+    ArbEntry entry,
+    dynamic validationResult,
+  ) {
     final theme = Theme.of(context);
     final hasErrors = validationResult?.hasCriticalIssues == true;
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -213,7 +226,7 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
 
   Widget _buildMetadataEditor(BuildContext context, ArbEntry entry) {
     final theme = Theme.of(context);
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -244,7 +257,7 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
 
   Widget _buildPlaceholdersSection(BuildContext context, ArbEntry entry) {
     final theme = Theme.of(context);
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -258,8 +271,12 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
               ),
             ),
             const SizedBox(height: 8),
-            ...entry.placeholders!.entries.map((placeholder) => 
-              _buildPlaceholderItem(context, placeholder.key, placeholder.value),
+            ...entry.placeholders!.entries.map(
+              (placeholder) => _buildPlaceholderItem(
+                context,
+                placeholder.key,
+                placeholder.value,
+              ),
             ),
           ],
         ),
@@ -267,9 +284,13 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
     );
   }
 
-  Widget _buildPlaceholderItem(BuildContext context, String name, ArbPlaceholder placeholder) {
+  Widget _buildPlaceholderItem(
+    BuildContext context,
+    String name,
+    ArbPlaceholder placeholder,
+  ) {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -321,7 +342,7 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
 
   Widget _buildIcuCasesSection(BuildContext context, ArbEntry entry) {
     final theme = Theme.of(context);
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -336,12 +357,12 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
             ),
             const SizedBox(height: 8),
             if (entry.pluralCases != null)
-              ...entry.pluralCases!.map((icuCase) => 
-                _buildIcuCaseItem(context, icuCase),
+              ...entry.pluralCases!.map(
+                (icuCase) => _buildIcuCaseItem(context, icuCase),
               ),
             if (entry.selectCases != null)
-              ...entry.selectCases!.map((icuCase) => 
-                _buildIcuCaseItem(context, icuCase),
+              ...entry.selectCases!.map(
+                (icuCase) => _buildIcuCaseItem(context, icuCase),
               ),
           ],
         ),
@@ -351,7 +372,7 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
 
   Widget _buildIcuCaseItem(BuildContext context, IcuCase icuCase) {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
@@ -364,7 +385,9 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
                 icuCase.selector,
                 style: const TextStyle(fontSize: 10),
               ),
-              backgroundColor: icuCase.isRequired ? Colors.orange.withOpacity(0.2) : null,
+              backgroundColor: icuCase.isRequired
+                  ? Colors.orange.withOpacity(0.2)
+                  : null,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
               visualDensity: VisualDensity.compact,
             ),
@@ -383,9 +406,12 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
     );
   }
 
-  Widget _buildValidationSection(BuildContext context, dynamic validationResult) {
+  Widget _buildValidationSection(
+    BuildContext context,
+    dynamic validationResult,
+  ) {
     final theme = Theme.of(context);
-    
+
     return Card(
       color: Colors.red.withOpacity(0.1),
       child: Padding(
@@ -408,12 +434,22 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
             ),
             const SizedBox(height: 8),
             if (validationResult.errors.isNotEmpty)
-              ...validationResult.errors.map((error) => 
-                _buildValidationItem(context, error.message, Colors.red, true),
+              ...validationResult.errors.map(
+                (error) => _buildValidationItem(
+                  context,
+                  error.message,
+                  Colors.red,
+                  true,
+                ),
               ),
             if (validationResult.warnings.isNotEmpty)
-              ...validationResult.warnings.map((warning) => 
-                _buildValidationItem(context, warning.message, Colors.orange, false),
+              ...validationResult.warnings.map(
+                (warning) => _buildValidationItem(
+                  context,
+                  warning.message,
+                  Colors.orange,
+                  false,
+                ),
               ),
           ],
         ),
@@ -421,30 +457,31 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
     );
   }
 
-  Widget _buildValidationItem(BuildContext context, String message, Color color, bool isError) {
+  Widget _buildValidationItem(
+    BuildContext context,
+    String message,
+    Color color,
+    bool isError,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(
-            isError ? Icons.error : Icons.warning,
-            size: 16,
-            color: color,
-          ),
+          Icon(isError ? Icons.error : Icons.warning, size: 16, color: color),
           const SizedBox(width: 8),
           Expanded(
-            child: Text(
-              message,
-              style: TextStyle(color: color),
-            ),
+            child: Text(message, style: TextStyle(color: color)),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, TranslationEditorLoadedState state) {
+  Widget _buildActionButtons(
+    BuildContext context,
+    TranslationEditorLoadedState state,
+  ) {
     return Row(
       children: [
         ElevatedButton.icon(
@@ -506,7 +543,7 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
 
   void _updateValue(BuildContext context, String value) {
     final state = context.read<TranslationEditorBloc>().state;
-    if (state is TranslationEditorLoadedState && 
+    if (state is TranslationEditorLoadedState &&
         state.session.selectedEntryKey != null &&
         state.session.currentFileLocale != null) {
       context.read<TranslationEditorBloc>().add(
@@ -524,8 +561,12 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
     // This would require updating the entry's metadata
   }
 
-  void _validateEntry(BuildContext context, TranslationEditorLoadedState state) {
-    if (state.session.selectedEntryKey != null && state.session.currentFileLocale != null) {
+  void _validateEntry(
+    BuildContext context,
+    TranslationEditorLoadedState state,
+  ) {
+    if (state.session.selectedEntryKey != null &&
+        state.session.currentFileLocale != null) {
       context.read<TranslationEditorBloc>().add(
         ValidateEntryEvent(
           fileLocale: state.session.currentFileLocale!,
@@ -539,18 +580,22 @@ class _TranslationEntryEditorWidgetState extends State<TranslationEntryEditorWid
     final state = context.read<TranslationEditorBloc>().state;
     if (state is TranslationEditorLoadedState && state.selectedEntry != null) {
       _valueController.text = state.selectedEntry!.value;
-      _descriptionController.text = state.selectedEntry!.metadata?.description ?? '';
+      _descriptionController.text =
+          state.selectedEntry!.metadata?.description ?? '';
     }
   }
 
   void _deleteEntry(BuildContext context, TranslationEditorLoadedState state) {
-    if (state.session.selectedEntryKey != null && state.session.currentFileLocale != null) {
+    if (state.session.selectedEntryKey != null &&
+        state.session.currentFileLocale != null) {
       // Show confirmation dialog
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Delete Entry'),
-          content: Text('Are you sure you want to delete "${state.session.selectedEntryKey}"?'),
+          content: Text(
+            'Are you sure you want to delete "${state.session.selectedEntryKey}"?',
+          ),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),

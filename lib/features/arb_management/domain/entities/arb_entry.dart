@@ -5,12 +5,12 @@ part 'arb_entry.mapper.dart';
 /// Types of ARB entries based on ICU message format
 @MappableEnum()
 enum ArbEntryType {
-  simple,           // "hello": "Hello"
-  plural,           // ICU plural syntax
-  select,           // ICU select syntax  
-  compound,         // Mixed plural/select
+  simple, // "hello": "Hello"
+  plural, // ICU plural syntax
+  select, // ICU select syntax
+  compound, // Mixed plural/select
   withPlaceholders, // Simple with {variables}
-  withDateFormat,   // DateTime formatting
+  withDateFormat, // DateTime formatting
   withNumberFormat, // Number/currency formatting
 }
 
@@ -41,19 +41,19 @@ class ArbPlaceholder with ArbPlaceholderMappable {
 
   /// Placeholder name (e.g., "count", "gender", "date")
   final String name;
-  
+
   /// Type of the placeholder
   final PlaceholderType type;
-  
+
   /// Format specification (e.g., "compact", "currency", "yMd")
   final String? format;
-  
+
   /// Optional parameters for formatting (e.g., {"decimalDigits": 2})
   final Map<String, dynamic>? optionalParameters;
-  
+
   /// Example value for testing/preview
   final String? example;
-  
+
   /// Description for translators
   final String? description;
 }
@@ -69,10 +69,10 @@ class IcuCase with IcuCaseMappable {
 
   /// The selector (e.g., "=0", "=1", "other", "male", "female")
   final String selector;
-  
+
   /// The message for this case
   final String message;
-  
+
   /// Whether this case is required (e.g., "other" is always required)
   final bool isRequired;
 }
@@ -89,13 +89,13 @@ class ArbEntryMetadata with ArbEntryMetadataMappable {
 
   /// Description of the entry for translators
   final String? description;
-  
+
   /// Context where this entry is used
   final String? context;
-  
+
   /// Examples of usage
   final List<String>? examples;
-  
+
   /// Additional notes for translators
   final String? translatorNotes;
 }
@@ -116,25 +116,25 @@ class ArbEntry with ArbEntryMappable {
 
   /// The key of the entry
   final String key;
-  
+
   /// The message value
   final String value;
-  
+
   /// Type of the entry
   final ArbEntryType type;
-  
+
   /// Placeholders in the message
   final Map<String, ArbPlaceholder>? placeholders;
-  
+
   /// Metadata for the entry
   final ArbEntryMetadata? metadata;
-  
+
   /// Plural cases for ICU plural messages
   final List<IcuCase>? pluralCases;
-  
+
   /// Select cases for ICU select messages
   final List<IcuCase>? selectCases;
-  
+
   /// Whether the message has nested ICU structures
   final bool hasNestedStructures;
 
@@ -142,10 +142,12 @@ class ArbEntry with ArbEntryMappable {
   bool get hasPlaceholders => placeholders?.isNotEmpty ?? false;
 
   /// Check if this entry is a plural message
-  bool get isPlural => type == ArbEntryType.plural || type == ArbEntryType.compound;
+  bool get isPlural =>
+      type == ArbEntryType.plural || type == ArbEntryType.compound;
 
   /// Check if this entry is a select message
-  bool get isSelect => type == ArbEntryType.select || type == ArbEntryType.compound;
+  bool get isSelect =>
+      type == ArbEntryType.select || type == ArbEntryType.compound;
 
   /// Get all placeholder names
   List<String> get placeholderNames => placeholders?.keys.toList() ?? [];
@@ -153,10 +155,12 @@ class ArbEntry with ArbEntryMappable {
   /// Check if entry has required "other" case for plural/select
   bool get hasRequiredOtherCase {
     if (isPlural) {
-      return pluralCases?.any((icuCase) => icuCase.selector == 'other') ?? false;
+      return pluralCases?.any((icuCase) => icuCase.selector == 'other') ??
+          false;
     }
     if (isSelect) {
-      return selectCases?.any((icuCase) => icuCase.selector == 'other') ?? false;
+      return selectCases?.any((icuCase) => icuCase.selector == 'other') ??
+          false;
     }
     return true; // Non-ICU messages don't need "other" case
   }

@@ -6,7 +6,8 @@ import 'package:get_it/get_it.dart';
 import '../../domain/use_cases/import_arb_file_use_case.dart';
 import '../../domain/use_cases/validate_icu_syntax_use_case.dart';
 import '../../domain/repositories/arb_file_repository.dart';
-import '../../domain/repositories/translation_session_repository.dart' as session_repo;
+import '../../domain/repositories/translation_session_repository.dart'
+    as session_repo;
 import '../bloc/arb_import_bloc.dart';
 import '../bloc/translation_editor_bloc.dart';
 import '../widgets/arb_file_import_widget.dart';
@@ -46,7 +47,8 @@ class _ArbTranslationPageState extends State<ArbTranslationPage> {
         BlocProvider<TranslationEditorBloc>(
           create: (context) => TranslationEditorBloc(
             arbFileRepository: GetIt.instance<ArbFileRepository>(),
-            sessionRepository: GetIt.instance<session_repo.TranslationSessionRepository>(),
+            sessionRepository:
+                GetIt.instance<session_repo.TranslationSessionRepository>(),
             validateIcuSyntaxUseCase:
                 GetIt.instance<ValidateIcuSyntaxUseCase>(),
           ),

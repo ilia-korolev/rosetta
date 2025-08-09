@@ -5,10 +5,10 @@ import 'features/arb_management/arb_management.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Initialize dependency injection
   await initializeDependencies();
-  
+
   runApp(const RosettaApp());
 }
 

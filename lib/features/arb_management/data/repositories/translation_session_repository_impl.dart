@@ -15,8 +15,10 @@ class TranslationSessionRepositoryImpl implements TranslationSessionRepository {
   @override
   Future<void> saveSession(TranslationSession session) async {
     final sessionsDir = await _getSessionsDirectory();
-    final sessionFile = File(path.join(sessionsDir.path, '${session.sessionId}.json'));
-    
+    final sessionFile = File(
+      path.join(sessionsDir.path, '${session.sessionId}.json'),
+    );
+
     // Convert session to JSON (simplified for now)
     final sessionData = {
       'sessionId': session.sessionId,
@@ -29,7 +31,7 @@ class TranslationSessionRepositoryImpl implements TranslationSessionRepository {
       // Note: In a real implementation, you'd need to serialize the full session
       // including files, changes, undo/redo stacks, etc.
     };
-    
+
     await sessionFile.writeAsString(
       const JsonEncoder.withIndent('  ').convert(sessionData),
     );
@@ -40,13 +42,13 @@ class TranslationSessionRepositoryImpl implements TranslationSessionRepository {
     try {
       final sessionsDir = await _getSessionsDirectory();
       final sessionFile = File(path.join(sessionsDir.path, '$sessionId.json'));
-      
+
       if (!await sessionFile.exists()) {
         return null;
       }
-      
+
       final sessionData = jsonDecode(await sessionFile.readAsString());
-      
+
       // TODO: Implement full session deserialization
       // For now, return null as this requires complex serialization
       return null;
@@ -64,9 +66,9 @@ class TranslationSessionRepositoryImpl implements TranslationSessionRepository {
           .whereType<File>()
           .where((file) => file.path.endsWith('.json'))
           .toList();
-      
+
       final sessions = <TranslationSession>[];
-      
+
       for (final file in sessionFiles) {
         try {
           final sessionData = jsonDecode(await file.readAsString());
@@ -77,7 +79,7 @@ class TranslationSessionRepositoryImpl implements TranslationSessionRepository {
           continue;
         }
       }
-      
+
       return sessions;
     } catch (e) {
       return <TranslationSession>[];
@@ -89,7 +91,7 @@ class TranslationSessionRepositoryImpl implements TranslationSessionRepository {
     try {
       final sessionsDir = await _getSessionsDirectory();
       final sessionFile = File(path.join(sessionsDir.path, '$sessionId.json'));
-      
+
       if (await sessionFile.exists()) {
         await sessionFile.delete();
       }
@@ -101,10 +103,8 @@ class TranslationSessionRepositoryImpl implements TranslationSessionRepository {
   @override
   Future<void> autoSaveSession(TranslationSession session) async {
     // Create a copy with updated auto-save timestamp
-    final updatedSession = session.copyWith(
-      lastAutoSave: DateTime.now(),
-    );
-    
+    final updatedSession = session.copyWith(lastAutoSave: DateTime.now());
+
     await saveSession(updatedSession);
   }
 
@@ -122,12 +122,14 @@ class TranslationSessionRepositoryImpl implements TranslationSessionRepository {
   /// Get the directory for storing session files
   Future<Directory> _getSessionsDirectory() async {
     final appDir = await getApplicationDocumentsDirectory();
-    final sessionsDir = Directory(path.join(appDir.path, 'rosetta', 'sessions'));
-    
+    final sessionsDir = Directory(
+      path.join(appDir.path, 'rosetta', 'sessions'),
+    );
+
     if (!await sessionsDir.exists()) {
       await sessionsDir.create(recursive: true);
     }
-    
+
     return sessionsDir;
   }
 }

@@ -54,7 +54,9 @@ class FileTabsWidget extends StatelessWidget {
                         hasUnsavedChanges: hasUnsavedChanges,
                         statistics: file.statistics,
                         onTap: () => _selectFile(context, locale),
-                        onClose: locales.length > 1 ? () => _closeFile(context, locale) : null,
+                        onClose: locales.length > 1
+                            ? () => _closeFile(context, locale)
+                            : null,
                       );
                     }).toList(),
                   ),
@@ -142,7 +144,7 @@ class _FileTab extends StatelessWidget {
                 color: hasUnsavedChanges ? Colors.orange : null,
               ),
               const SizedBox(width: 8),
-              
+
               // File info
               Expanded(
                 child: Column(
@@ -152,7 +154,9 @@ class _FileTab extends StatelessWidget {
                     Text(
                       locale.toUpperCase(),
                       style: theme.textTheme.labelMedium?.copyWith(
-                        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                        fontWeight: isSelected
+                            ? FontWeight.bold
+                            : FontWeight.normal,
                       ),
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -160,13 +164,15 @@ class _FileTab extends StatelessWidget {
                       Text(
                         '${statistics.translatedEntries}/${statistics.totalEntries}',
                         style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.textTheme.bodySmall?.color?.withOpacity(0.7),
+                          color: theme.textTheme.bodySmall?.color?.withOpacity(
+                            0.7,
+                          ),
                         ),
                       ),
                   ],
                 ),
               ),
-              
+
               // Unsaved changes indicator
               if (hasUnsavedChanges)
                 Container(
@@ -178,13 +184,16 @@ class _FileTab extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                 ),
-              
+
               // Close button
               if (onClose != null)
                 IconButton(
                   onPressed: onClose,
                   icon: const Icon(Icons.close, size: 16),
-                  constraints: const BoxConstraints(minWidth: 24, minHeight: 24),
+                  constraints: const BoxConstraints(
+                    minWidth: 24,
+                    minHeight: 24,
+                  ),
                   padding: EdgeInsets.zero,
                   tooltip: 'Close file',
                 ),

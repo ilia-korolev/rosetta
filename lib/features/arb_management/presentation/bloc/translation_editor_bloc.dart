@@ -5,7 +5,8 @@ import '../../domain/entities/arb_entry.dart';
 import '../../domain/entities/arb_file.dart';
 import '../../domain/entities/translation_session.dart';
 import '../../domain/repositories/arb_file_repository.dart';
-import '../../domain/repositories/translation_session_repository.dart' as session_repo;
+import '../../domain/repositories/translation_session_repository.dart'
+    as session_repo;
 import '../../domain/use_cases/validate_icu_syntax_use_case.dart';
 
 part 'translation_editor_bloc.mapper.dart';
@@ -250,12 +251,12 @@ class EntryFilter with EntryFilterMappable {
 /// BLoC for handling translation editing
 class TranslationEditorBloc
     extends Bloc<TranslationEditorEvent, TranslationEditorState> {
-    TranslationEditorBloc({
+  TranslationEditorBloc({
     required ArbFileRepository arbFileRepository,
     required session_repo.TranslationSessionRepository sessionRepository,
     required ValidateIcuSyntaxUseCase validateIcuSyntaxUseCase,
   }) : _arbFileRepository = arbFileRepository,
-        _sessionRepository = sessionRepository,
+       _sessionRepository = sessionRepository,
        _validateIcuSyntaxUseCase = validateIcuSyntaxUseCase,
        super(const TranslationEditorInitialState()) {
     on<InitializeSessionEvent>(_onInitializeSession);

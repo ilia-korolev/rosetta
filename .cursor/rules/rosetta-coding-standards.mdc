@@ -15,6 +15,13 @@ alwaysApply: true
 - Follow **very_good_analysis** lint rules
 - Keep functions small (max 20-30 lines)
 
+## Code Formatting
+- **ALWAYS run `dart format .` after making code changes**
+- Ensure consistent formatting across the entire codebase
+- Use the default Dart formatter settings (80-character line limit)
+- Format before committing any changes to maintain code consistency
+- Consider setting up auto-format on save in your IDE for efficiency
+
 ## Desktop-First Design
 - Design for larger screens with keyboard shortcuts
 - Support mouse interactions (hover, right-click)

@@ -14,7 +14,9 @@ class ArbFileRepositoryImpl implements ArbFileRepository {
   }
 
   @override
-  Future<Map<String, ArbFile>> importMultipleFiles(List<String> filePaths) async {
+  Future<Map<String, ArbFile>> importMultipleFiles(
+    List<String> filePaths,
+  ) async {
     return _dataSource.importMultipleFiles(filePaths);
   }
 
@@ -29,7 +31,11 @@ class ArbFileRepositoryImpl implements ArbFileRepository {
   }
 
   @override
-  Future<void> exportFile(ArbFile file, String outputPath, String format) async {
+  Future<void> exportFile(
+    ArbFile file,
+    String outputPath,
+    String format,
+  ) async {
     await _dataSource.exportFile(file, outputPath, format);
   }
 
@@ -40,7 +46,12 @@ class ArbFileRepositoryImpl implements ArbFileRepository {
     String format, {
     bool compress = false,
   }) async {
-    await _dataSource.exportMultipleFiles(files, outputPath, format, compress: compress);
+    await _dataSource.exportMultipleFiles(
+      files,
+      outputPath,
+      format,
+      compress: compress,
+    );
   }
 
   @override

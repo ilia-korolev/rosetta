@@ -56,7 +56,7 @@ class TranslationTableWidget extends StatelessWidget {
           children: [
             // Table header
             _buildTableHeader(context),
-            
+
             // Table content
             Expanded(
               child: ListView.builder(
@@ -64,15 +64,27 @@ class TranslationTableWidget extends StatelessWidget {
                 itemBuilder: (context, index) {
                   final entryKey = entryKeys[index];
                   final entry = currentFile.getEntry(entryKey);
-                  
+
                   if (entry == null) return const SizedBox.shrink();
-                  
+
                   return _TranslationTableRow(
                     entry: entry,
                     isSelected: state.session.selectedEntryKey == entryKey,
-                    validationResult: state.validationResults?[state.session.currentFileLocale]?[entryKey],
-                    onTap: () => _selectEntry(context, state.session.currentFileLocale!, entryKey),
-                    onEdit: (newValue) => _updateEntry(context, state.session.currentFileLocale!, entryKey, newValue),
+                    validationResult:
+                        state.validationResults?[state
+                            .session
+                            .currentFileLocale]?[entryKey],
+                    onTap: () => _selectEntry(
+                      context,
+                      state.session.currentFileLocale!,
+                      entryKey,
+                    ),
+                    onEdit: (newValue) => _updateEntry(
+                      context,
+                      state.session.currentFileLocale!,
+                      entryKey,
+                      newValue,
+                    ),
                   );
                 },
               ),
@@ -85,25 +97,20 @@ class TranslationTableWidget extends StatelessWidget {
 
   Widget _buildTableHeader(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       height: 48,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: theme.colorScheme.surfaceVariant,
-        border: Border(
-          bottom: BorderSide(color: theme.dividerColor),
-        ),
+        border: Border(bottom: BorderSide(color: theme.dividerColor)),
       ),
       child: Row(
         children: [
           const SizedBox(width: 24), // Icon space
           const SizedBox(
             width: 200,
-            child: Text(
-              'Key',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+            child: Text('Key', style: TextStyle(fontWeight: FontWeight.bold)),
           ),
           const SizedBox(width: 16),
           const Expanded(
@@ -115,10 +122,7 @@ class TranslationTableWidget extends StatelessWidget {
           const SizedBox(width: 16),
           const SizedBox(
             width: 80,
-            child: Text(
-              'Type',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+            child: Text('Type', style: TextStyle(fontWeight: FontWeight.bold)),
           ),
           const SizedBox(width: 16),
           const SizedBox(
@@ -139,7 +143,12 @@ class TranslationTableWidget extends StatelessWidget {
     );
   }
 
-  void _updateEntry(BuildContext context, String fileLocale, String entryKey, String newValue) {
+  void _updateEntry(
+    BuildContext context,
+    String fileLocale,
+    String entryKey,
+    String newValue,
+  ) {
     context.read<TranslationEditorBloc>().add(
       UpdateEntryValueEvent(
         fileLocale: fileLocale,
@@ -198,12 +207,13 @@ class _TranslationTableRowState extends State<_TranslationTableRow> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final hasIssues = widget.validationResult?.hasIssues == true;
-    final hasCriticalIssues = widget.validationResult?.hasCriticalIssues == true;
-    
+    final hasCriticalIssues =
+        widget.validationResult?.hasCriticalIssues == true;
+
     return Material(
-      color: widget.isSelected 
-        ? theme.colorScheme.primaryContainer.withOpacity(0.3)
-        : Colors.transparent,
+      color: widget.isSelected
+          ? theme.colorScheme.primaryContainer.withOpacity(0.3)
+          : Colors.transparent,
       child: InkWell(
         onTap: widget.onTap,
         child: Container(
@@ -218,7 +228,7 @@ class _TranslationTableRowState extends State<_TranslationTableRow> {
             children: [
               // Type/status icon
               _buildStatusIcon(theme, hasIssues, hasCriticalIssues),
-              
+
               // Key
               SizedBox(
                 width: 200,
@@ -226,31 +236,34 @@ class _TranslationTableRowState extends State<_TranslationTableRow> {
                   widget.entry.key,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     fontFamily: 'monospace',
-                    fontWeight: widget.isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontWeight: widget.isSelected
+                        ? FontWeight.bold
+                        : FontWeight.normal,
                   ),
                 ),
               ),
               const SizedBox(width: 16),
-              
+
               // Translation value
               Expanded(
-                child: _isEditing 
-                  ? _buildEditField(theme)
-                  : _buildDisplayValue(theme),
+                child: _isEditing
+                    ? _buildEditField(theme)
+                    : _buildDisplayValue(theme),
               ),
               const SizedBox(width: 16),
-              
+
               // Entry type
-              SizedBox(
-                width: 80,
-                child: _buildTypeChip(theme),
-              ),
+              SizedBox(width: 80, child: _buildTypeChip(theme)),
               const SizedBox(width: 16),
-              
+
               // Status indicators
               SizedBox(
                 width: 60,
-                child: _buildStatusIndicators(theme, hasIssues, hasCriticalIssues),
+                child: _buildStatusIndicators(
+                  theme,
+                  hasIssues,
+                  hasCriticalIssues,
+                ),
               ),
             ],
           ),
@@ -259,10 +272,14 @@ class _TranslationTableRowState extends State<_TranslationTableRow> {
     );
   }
 
-  Widget _buildStatusIcon(ThemeData theme, bool hasIssues, bool hasCriticalIssues) {
+  Widget _buildStatusIcon(
+    ThemeData theme,
+    bool hasIssues,
+    bool hasCriticalIssues,
+  ) {
     IconData icon;
     Color? color;
-    
+
     if (hasCriticalIssues) {
       icon = Icons.error;
       color = Colors.red;
@@ -276,11 +293,8 @@ class _TranslationTableRowState extends State<_TranslationTableRow> {
       icon = Icons.check_circle;
       color = Colors.green;
     }
-    
-    return SizedBox(
-      width: 24,
-      child: Icon(icon, size: 16, color: color),
-    );
+
+    return SizedBox(width: 24, child: Icon(icon, size: 16, color: color));
   }
 
   Widget _buildEditField(ThemeData theme) {
@@ -310,17 +324,17 @@ class _TranslationTableRowState extends State<_TranslationTableRow> {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: widget.entry.value.isEmpty
-          ? Text(
-              '(empty)',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: Colors.grey,
-                fontStyle: FontStyle.italic,
+            ? Text(
+                '(empty)',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey,
+                  fontStyle: FontStyle.italic,
+                ),
+              )
+            : SelectableText(
+                widget.entry.value,
+                style: theme.textTheme.bodyMedium,
               ),
-            )
-          : SelectableText(
-              widget.entry.value,
-              style: theme.textTheme.bodyMedium,
-            ),
       ),
     );
   }
@@ -328,7 +342,7 @@ class _TranslationTableRowState extends State<_TranslationTableRow> {
   Widget _buildTypeChip(ThemeData theme) {
     Color chipColor;
     String label;
-    
+
     switch (widget.entry.type) {
       case ArbEntryType.simple:
         chipColor = Colors.blue;
@@ -359,12 +373,9 @@ class _TranslationTableRowState extends State<_TranslationTableRow> {
         label = 'Number';
         break;
     }
-    
+
     return Chip(
-      label: Text(
-        label,
-        style: const TextStyle(fontSize: 10),
-      ),
+      label: Text(label, style: const TextStyle(fontSize: 10)),
       backgroundColor: chipColor.withOpacity(0.2),
       side: BorderSide(color: chipColor),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -372,38 +383,29 @@ class _TranslationTableRowState extends State<_TranslationTableRow> {
     );
   }
 
-  Widget _buildStatusIndicators(ThemeData theme, bool hasIssues, bool hasCriticalIssues) {
+  Widget _buildStatusIndicators(
+    ThemeData theme,
+    bool hasIssues,
+    bool hasCriticalIssues,
+  ) {
     final indicators = <Widget>[];
-    
+
     if (widget.entry.value.isEmpty) {
-      indicators.add(
-        Icon(Icons.circle_outlined, size: 12, color: Colors.grey),
-      );
+      indicators.add(Icon(Icons.circle_outlined, size: 12, color: Colors.grey));
     } else {
-      indicators.add(
-        Icon(Icons.circle, size: 12, color: Colors.green),
-      );
+      indicators.add(Icon(Icons.circle, size: 12, color: Colors.green));
     }
-    
+
     if (widget.entry.hasPlaceholders) {
-      indicators.add(
-        Icon(Icons.code, size: 12, color: Colors.blue),
-      );
+      indicators.add(Icon(Icons.code, size: 12, color: Colors.blue));
     }
-    
+
     if (hasCriticalIssues) {
-      indicators.add(
-        Icon(Icons.error, size: 12, color: Colors.red),
-      );
+      indicators.add(Icon(Icons.error, size: 12, color: Colors.red));
     } else if (hasIssues) {
-      indicators.add(
-        Icon(Icons.warning, size: 12, color: Colors.orange),
-      );
+      indicators.add(Icon(Icons.warning, size: 12, color: Colors.orange));
     }
-    
-    return Wrap(
-      spacing: 2,
-      children: indicators,
-    );
+
+    return Wrap(spacing: 2, children: indicators);
   }
 }

@@ -12,8 +12,10 @@ class UndoRedoToolbarWidget extends StatelessWidget {
     return BlocBuilder<TranslationEditorBloc, TranslationEditorState>(
       buildWhen: (previous, current) {
         // Only rebuild when undo/redo availability changes
-        if (current is TranslationEditorLoadedState && previous is TranslationEditorLoadedState) {
-          return current.canUndo != previous.canUndo || current.canRedo != previous.canRedo;
+        if (current is TranslationEditorLoadedState &&
+            previous is TranslationEditorLoadedState) {
+          return current.canUndo != previous.canUndo ||
+              current.canRedo != previous.canRedo;
         }
         return current is TranslationEditorLoadedState;
       },
@@ -26,16 +28,20 @@ class UndoRedoToolbarWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              onPressed: state.canUndo 
-                ? () => context.read<TranslationEditorBloc>().add(const UndoEvent())
-                : null,
+              onPressed: state.canUndo
+                  ? () => context.read<TranslationEditorBloc>().add(
+                      const UndoEvent(),
+                    )
+                  : null,
               icon: const Icon(Icons.undo),
               tooltip: 'Undo (Ctrl+Z)',
             ),
             IconButton(
-              onPressed: state.canRedo 
-                ? () => context.read<TranslationEditorBloc>().add(const RedoEvent())
-                : null,
+              onPressed: state.canRedo
+                  ? () => context.read<TranslationEditorBloc>().add(
+                      const RedoEvent(),
+                    )
+                  : null,
               icon: const Icon(Icons.redo),
               tooltip: 'Redo (Ctrl+Y)',
             ),
