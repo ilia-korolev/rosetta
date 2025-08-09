@@ -128,7 +128,9 @@ class _FileTab extends StatelessWidget {
     final colorScheme = theme.colorScheme;
 
     return Material(
-      color: isSelected ? colorScheme.surfaceVariant : Colors.transparent,
+      color: isSelected
+          ? colorScheme.surfaceContainerHighest
+          : Colors.transparent,
       child: InkWell(
         onTap: onTap,
         child: Container(

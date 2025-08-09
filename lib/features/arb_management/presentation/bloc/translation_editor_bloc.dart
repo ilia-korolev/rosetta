@@ -204,8 +204,9 @@ class TranslationEditorLoadedState extends TranslationEditorState
 
   /// Get validation result for current entry
   IcuValidationResult? get currentEntryValidation {
-    if (session.currentFileLocale == null || session.selectedEntryKey == null)
+    if (session.currentFileLocale == null || session.selectedEntryKey == null) {
       return null;
+    }
     return validationResults?[session.currentFileLocale]?[session
         .selectedEntryKey];
   }

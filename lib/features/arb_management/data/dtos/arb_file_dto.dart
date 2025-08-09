@@ -141,8 +141,9 @@ class PlaceholderDto with PlaceholderDtoMappable {
     final json = <String, dynamic>{'type': type};
 
     if (format != null) json['format'] = format;
-    if (optionalParameters != null)
+    if (optionalParameters != null) {
       json['optionalParameters'] = optionalParameters;
+    }
     if (example != null) json['example'] = example;
     if (description != null) json['description'] = description;
 

@@ -1,5 +1,4 @@
 import '../entities/arb_file.dart';
-import '../entities/translation_session.dart';
 
 /// Repository interface for ARB file operations
 abstract class ArbFileRepository {

@@ -15,12 +15,20 @@ alwaysApply: true
 - Follow **very_good_analysis** lint rules
 - Keep functions small (max 20-30 lines)
 
-## Code Formatting
+## Code Formatting & Quality
 - **ALWAYS run `dart format .` after making code changes**
+- **ALWAYS run `dart fix --apply` to automatically apply available fixes**
 - Ensure consistent formatting across the entire codebase
 - Use the default Dart formatter settings (80-character line limit)
-- Format before committing any changes to maintain code consistency
+- Apply automated fixes for lint violations and deprecated APIs
+- Format and fix before committing any changes to maintain code consistency
 - Consider setting up auto-format on save in your IDE for efficiency
+
+### Recommended Workflow
+1. Make your code changes
+2. Run `dart fix --apply` to apply automatic fixes
+3. Run `dart format .` to format the code
+4. Review and commit your changes
 
 ## Desktop-First Design
 - Design for larger screens with keyboard shortcuts
