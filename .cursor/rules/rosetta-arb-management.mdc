@@ -1,0 +1,56 @@
+---
+description: ARB file operations, validation, and file management guidelines for Rosetta
+globs: 
+  - "lib/features/arb_management/**/*.dart"
+  - "lib/features/validation/**/*.dart"
+  - "lib/features/export_import/**/*.dart"
+  - "lib/shared/data/services/*arb*.dart"
+  - "lib/shared/data/services/*file*.dart"
+  - "lib/shared/data/services/*validation*.dart"
+  - "*.arb"
+alwaysApply: false
+---
+
+# Rosetta Project - ARB Management Rules
+
+## ARB File Operations
+- Parse ARB files with error handling and syntax validation
+- Support large files with efficient parsing and file watching
+- Handle UTF-8 encoding, backup/recovery, drag-and-drop
+- Implement auto-save and recent files functionality
+
+## Platform-Specific File Handling
+### Desktop Platforms (Primary Focus)
+- **macOS**: Follow HIG, native menu bars, file dialogs, keyboard shortcuts, file associations
+- **Windows**: Follow Fluent Design, Windows-style operations, accessibility features
+- **Linux**: Support various desktop environments, file managers, distributions
+
+### Mobile (Secondary Support)  
+- **iOS**: Adapt UI for mobile, use Cupertino widgets, handle file sharing limitations
+- **Android**: Follow Material Design, handle file system access and storage permissions
+
+## ARB Validation Rules
+- **ARB Validation**: Check missing keys, placeholder consistency, ICU syntax, duplicates, JSON syntax
+- **Translation Quality**: Check empty translations, placeholder usage, length constraints
+- Clearly communicate validation failures
+- Provide suggestions for fixing validation errors
+- Allow partial saves with warnings
+- Implement error highlighting in editors
+
+## File Security & Performance
+- **Security**: Validate file inputs, handle untrusted ARB files safely, sanitize user inputs
+- **Performance**: Lazy loading for large translation projects, efficient data structures, pagination, caching, background processing
+- Handle file not found errors gracefully
+- Provide meaningful error messages for file format issues
+- Implement retry mechanisms for transient failures
+- Log file operation errors for debugging
+- Provide user-friendly error recovery options
+
+## ARB-Specific Features
+When working on ARB management features, ensure:
+- Efficient parsing of large ARB files (1000+ translation keys)
+- Real-time validation with user-friendly error reporting
+- Support for ICU message format and plural forms
+- Metadata preservation (@@locale, descriptions, etc.)
+- Backup and recovery mechanisms for data safety
+- Cross-platform file system compatibility

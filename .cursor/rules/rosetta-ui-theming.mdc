@@ -1,0 +1,64 @@
+---
+description: UI theming, localization, and routing guidelines for Rosetta
+globs: 
+  - "lib/core/theme/**/*.dart"
+  - "lib/core/routing/**/*.dart"
+  - "lib/core/extensions/**/*.dart"
+  - "lib/l10n/**/*.dart"
+  - "lib/shared/presentation/**/*.dart"
+  - "lib/features/*/presentation/**/*.dart"
+  - "lib/features/translation_editor/**/*.dart"
+  - "lib/features/project_management/**/*.dart"
+  - "lib/features/analytics/**/*.dart"
+alwaysApply: false
+---
+
+# Rosetta Project - UI & Theming Rules
+
+## Theming Guidelines
+- Support **light and dark themes** using Material 3 `ThemeData`
+- Create **ThemeExtensions** for spacing, radiuses, sizes, durations
+- Access via context extensions: `context.spacing`, `context.radiuses`, etc.
+- Adapt spacing and typography for desktop interfaces
+- Support high contrast themes for accessibility
+
+## Routing Guidelines
+- Use **go_router** for declarative routing with type-safe navigation
+- Support nested routing, deep linking, and desktop patterns (tabs, multiple windows)
+- Access via context extensions: `context.goTo(path)`, `context.pushTo(path)`, `context.pop()`
+
+## Localization (l10n) Guidelines
+
+### Setup
+- Use **flutter_localizations** and **intl** packages
+- Enable l10n in `pubspec.yaml` with `generate: true`
+- Create ARB files in `lib/l10n/` (app_en.arb, app_es.arb, etc.)
+- Support: English, Spanish, French, German, Russian, Chinese, Japanese, Arabic
+
+### Translation Key Naming
+Use structured naming: `<feature><component><descriptor>`
+- Examples: `arbManagementFileButtonOpen`, `translationEditorTableHeaderKey`, `commonButtonSave`
+- Feature prefixes: `arbManagement`, `translationEditor`, `projectManagement`, `validation`, `exportImport`, `analytics`, `common`
+
+### Implementation  
+- Access via `context.l10n` extension method
+- Include `@@locale` metadata and translator descriptions in ARB files
+- Use placeholders for dynamic content: `{fileName}`
+- Handle missing translations with fallbacks
+
+## UI Component Guidelines
+- Create small, focused, reusable widgets
+- Follow Material Design 3 guidelines with desktop adaptations
+- Use proper widget keys for performance optimization
+- Implement proper keyboard navigation for desktop
+- Support screen reader accessibility
+- Design responsive layouts that work on both desktop and mobile
+
+## Translation Editor UI Specifics
+When working on translation editor components:
+- Optimize for large translation datasets (1000+ entries)
+- Support keyboard shortcuts for productivity
+- Implement efficient table/list virtualization
+- Provide clear visual feedback for validation states
+- Support inline editing with proper focus management
+- Include drag-and-drop functionality for desktop workflows

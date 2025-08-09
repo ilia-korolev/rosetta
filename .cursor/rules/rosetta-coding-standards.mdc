@@ -1,0 +1,59 @@
+---
+description: Coding standards, testing, and documentation guidelines for Rosetta development
+globs: 
+  - "lib/**/*.dart"
+  - "test/**/*.dart"
+alwaysApply: true
+---
+
+# Rosetta Project - Coding Standards
+
+## Core Practices
+- Use `const` constructors, composition over inheritance
+- Use **dart_mappable** for data classes (auto-generates copyWith, ==, hashCode)
+- Create small, focused widgets; prefer `StatelessWidget`
+- Follow **very_good_analysis** lint rules
+- Keep functions small (max 20-30 lines)
+
+## Desktop-First Design
+- Design for larger screens with keyboard shortcuts
+- Support mouse interactions (hover, right-click)
+- Optimize for file operations and large datasets
+- Consider multi-window support
+
+## Performance
+- Use `ListView.builder()` for large lists
+- Implement proper resource disposal (controllers, streams, blocs)
+- Use `const` constructors extensively
+- Cache parsed ARB data
+
+## Testing Requirements
+- Write unit/widget/bloc tests using **bloc_test** and **mocktail**
+- Mock get_it dependencies in tests
+- Aim for >80% code coverage
+- Test error scenarios and edge cases
+
+## Documentation Guidelines
+- Document public APIs, business logic, ARB format specifics
+- Use `///` for public members, focus on "why" not "what"
+- Keep documentation current with code changes
+
+## Quality Assurance
+- **Error Handling**: Graceful file operation errors, meaningful messages, retry mechanisms, user-friendly recovery
+- **Security**: Validate file inputs, handle untrusted ARB files safely, sanitize user inputs
+- **Performance**: Lazy loading, efficient data structures, pagination, caching, background processing
+- **Accessibility**: Screen reader support, keyboard navigation, high contrast themes, font scaling
+
+When suggesting code changes or new features, always consider:
+1. How it fits into the clean architecture
+2. Bloc pattern implementation with get_it dependency injection
+3. Performance implications for large translation files
+4. Desktop-first design principles
+5. Cross-platform compatibility
+6. File operation safety and error handling
+7. Testing requirements with mocktail mocking
+8. Security implications for file operations
+9. Accessibility for translation professionals
+10. Code maintainability and extensibility
+
+Remember: Write code that is readable, testable, and maintainable. Prioritize user experience for translation professionals.

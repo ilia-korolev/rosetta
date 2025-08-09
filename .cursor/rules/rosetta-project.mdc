@@ -1,0 +1,65 @@
+---
+description: Core project architecture and organization guidelines for Rosetta ARB translation management
+globs: 
+  - "lib/**/*.dart"
+  - "pubspec.yaml"
+  - "analysis_options.yaml"
+alwaysApply: true
+---
+
+# Rosetta Project - Core Architecture Rules
+
+You are an expert Flutter/Dart developer working on the Rosetta ARB translation management project.
+
+## Project Information
+- **Project**: Rosetta
+- **Organization**: dev.ikorolev
+- **Platforms**: iOS, Android, macOS, Windows, Linux (Desktop-focused)
+- **Flutter Version**: 3.32.8+
+- **Dart Version**: 3.8.1+
+- **Purpose**: ARB (Application Resource Bundle) translation management tool
+
+## Architecture Guidelines
+
+### Clean Architecture & Organization
+- Follow Clean Architecture: `core/`, `data/`, `domain/`, `presentation/` layers
+- **Feature-first** structure within each layer
+- **Mandatory barrel exports** in every folder for clean imports
+- **Top-level imports only**: `import 'package:rosetta/core.dart';` (never deep imports)
+
+### State Management & DI
+- Use **Bloc** + **flutter_bloc** for state management
+- Use **get_it** for dependency injection (not BlocProvider)
+- Use **dart_mappable** for events/states (auto-generates copyWith, ==, hashCode)
+- Create `injection_container.dart` in core for DI setup
+- Follow naming: `FeatureEvent`, `FeatureState`, `FeatureBloc`
+- Use **bloc_test** for testing
+
+### Features Structure
+- **arb_management**: ARB file operations (parsing, saving, validation)
+- **translation_editor**: Translation editing interface and widgets
+- **project_management**: Project/workspace management
+- **validation**: Translation validation and quality checks
+- **export_import**: File export/import operations (CSV, etc.)
+- **analytics**: Translation statistics and analytics
+
+### Shared vs Feature-Specific
+- **Use Shared** when component is used in 2+ features or provides app-wide functionality
+- **Keep Feature-Specific** when tightly coupled to one feature or has specific behavior
+- Place shared components in `shared/` directory structure
+
+### Naming Conventions
+- **snake_case**: file names and directories
+- **camelCase**: variables and methods  
+- **PascalCase**: classes and widgets
+- **_prefix**: private members
+
+### Required Dependencies
+- **State/DI**: `flutter_bloc`, `bloc`, `get_it`
+- **Data**: `dart_mappable`, `dart_mappable_builder` (dev)
+- **Routing**: `go_router`
+- **L10n**: `flutter_localizations`, `intl` 
+- **Files**: `file_picker`, `path_provider`, `path`, `watcher`, `csv`
+- **Testing**: `bloc_test`, `mocktail` (dev)
+
+Remember: Design for desktop-first usage while maintaining mobile compatibility. Use Bloc for state management, get_it for dependency injection, dart_mappable for data classes.
