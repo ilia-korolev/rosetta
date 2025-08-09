@@ -1,0 +1,83 @@
+{
+  "@@locale": "es",
+  "@@context": "Archivo ARB de muestra para pruebas de Rosetta",
+  "@@author": "Equipo Rosetta",
+  "@@version": "1.0.0",
+  
+  "hello": "Hola",
+  "@hello": {
+    "description": "Un saludo simple"
+  },
+  
+  "helloUser": "¡Hola, {name}!",
+  "@helloUser": {
+    "description": "Saludo con el nombre del usuario",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "El nombre del usuario"
+      }
+    }
+  },
+  
+  "itemCount": "{count, plural, =0{Sin artículos} =1{Un artículo} other{{count} artículos}}",
+  "@itemCount": {
+    "description": "Mostrar el número de artículos",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "genderMessage": "{gender, select, male{Él es} female{Ella es} other{Son}} desarrollador",
+  "@genderMessage": {
+    "description": "Mensaje basado en género",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "dateMessage": "Hoy es {date}",
+  "@dateMessage": {
+    "description": "Mostrar la fecha de hoy",
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "yMMMMd"
+      }
+    }
+  },
+  
+  "priceMessage": "El precio es {price}",
+  "@priceMessage": {
+    "description": "Mostrar precio con formato de moneda",
+    "placeholders": {
+      "price": {
+        "type": "double",
+        "format": "currency",
+        "optionalParameters": {
+          "decimalDigits": 2
+        }
+      }
+    }
+  },
+  
+  "complexMessage": "El usuario {name} tiene {itemCount, plural, =0{ningún artículo} =1{un artículo} other{{itemCount} artículos}} en {gender, select, male{su} female{su} other{su}} carrito",
+  "@complexMessage": {
+    "description": "Mensaje complejo con múltiples características ICU",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "itemCount": {
+        "type": "int"
+      },
+      "gender": {
+        "type": "String"
+      }
+    }
+  }
+}

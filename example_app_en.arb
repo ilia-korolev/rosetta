@@ -1,0 +1,83 @@
+{
+  "@@locale": "en",
+  "@@context": "Sample ARB file for Rosetta testing",
+  "@@author": "Rosetta Team",
+  "@@version": "1.0.0",
+  
+  "hello": "Hello",
+  "@hello": {
+    "description": "A simple greeting"
+  },
+  
+  "helloUser": "Hello, {name}!",
+  "@helloUser": {
+    "description": "Greeting with user name",
+    "placeholders": {
+      "name": {
+        "type": "String",
+        "description": "The user's name"
+      }
+    }
+  },
+  
+  "itemCount": "{count, plural, =0{No items} =1{One item} other{{count} items}}",
+  "@itemCount": {
+    "description": "Display the number of items",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  
+  "genderMessage": "{gender, select, male{He is} female{She is} other{They are}} a developer",
+  "@genderMessage": {
+    "description": "Message based on gender",
+    "placeholders": {
+      "gender": {
+        "type": "String"
+      }
+    }
+  },
+  
+  "dateMessage": "Today is {date}",
+  "@dateMessage": {
+    "description": "Display today's date",
+    "placeholders": {
+      "date": {
+        "type": "DateTime",
+        "format": "yMMMMd"
+      }
+    }
+  },
+  
+  "priceMessage": "The price is {price}",
+  "@priceMessage": {
+    "description": "Display price with currency formatting",
+    "placeholders": {
+      "price": {
+        "type": "double",
+        "format": "currency",
+        "optionalParameters": {
+          "decimalDigits": 2
+        }
+      }
+    }
+  },
+  
+  "complexMessage": "User {name} has {itemCount, plural, =0{no items} =1{one item} other{{itemCount} items}} in {gender, select, male{his} female{her} other{their}} cart",
+  "@complexMessage": {
+    "description": "Complex message with multiple ICU features",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "itemCount": {
+        "type": "int"
+      },
+      "gender": {
+        "type": "String"
+      }
+    }
+  }
+}
