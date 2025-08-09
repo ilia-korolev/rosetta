@@ -14,6 +14,7 @@ alwaysApply: true
 - Create small, focused widgets; prefer `StatelessWidget`
 - Follow **very_good_analysis** lint rules
 - Keep functions small (max 20-30 lines)
+- **One class per file** (exceptions: sealed classes with subclasses, private helper classes, auto-generated files)
 
 ## Code Formatting & Quality
 - **ALWAYS run `dart format .` after making code changes**
