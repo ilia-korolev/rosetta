@@ -1,3 +1,13 @@
+---
+description: Guidelines for Flutter development in the Rosetta ARB translation management project
+globs: 
+  - "lib/**/*.dart"
+  - "test/**/*.dart"
+  - "pubspec.yaml"
+  - "analysis_options.yaml"
+alwaysApply: true
+---
+
 # Rosetta Flutter Project - Cursor Rules
 
 You are an expert Flutter/Dart developer working on the Rosetta project. Follow these guidelines:
@@ -25,6 +35,7 @@ You are an expert Flutter/Dart developer working on the Rosetta project. Follow 
 - Create `injection_container.dart` in core for DI setup
 - Follow naming: `FeatureEvent`, `FeatureState`, `FeatureBloc`
 - Use **bloc_test** for testing
+
 ### Features Structure
 - **arb_management**: ARB file operations (parsing, saving, validation)
 - **translation_editor**: Translation editing interface and widgets
