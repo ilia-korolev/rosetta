@@ -56,7 +56,7 @@ alwaysApply: true
 
 ## AI Assistant Guidelines
 - **ALWAYS identify the current AI model** in responses when providing assistance
-- Include model information in the format: "**AI Model**: [Model Name]" at the end of responses
+- Include model information in the format: "**AI Model**: [Model Name]" at the beginning of responses
 - **Keep conclusion sections concise and focused** - avoid overly verbose summaries
 - Prioritize actionable information over detailed explanations in conclusions
 - This helps maintain transparency and context for the development team
