@@ -1,9 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import 'arb_entry_metadata.dart';
-import 'arb_entry_type.dart';
-import 'arb_placeholder.dart';
-import 'icu_case.dart';
+import 'package:rosetta/features/features.dart';
 
 part 'arb_entry.mapper.dart';
 

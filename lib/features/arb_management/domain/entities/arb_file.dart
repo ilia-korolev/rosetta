@@ -1,7 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'arb_entry.dart';
-import 'arb_entry_type.dart';
-import 'arb_placeholder.dart';
+import 'package:rosetta/features/features.dart';
 
 part 'arb_file.mapper.dart';
 

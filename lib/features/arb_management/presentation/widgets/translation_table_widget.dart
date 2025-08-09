@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/entities/arb_entry.dart';
-import '../../domain/entities/arb_entry_type.dart';
-import '../bloc/translation_editor_bloc.dart';
+import 'package:rosetta/features/features.dart';
 
 /// Widget that displays a table of translation entries
 class TranslationTableWidget extends StatelessWidget {

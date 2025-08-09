@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
 
-import '../features/arb_management/arb_management.dart';
-import 'data_sources/preferences_data_source.dart';
+import 'package:rosetta/features/features.dart';
+import 'package:rosetta/core/core.dart';
 
 final getIt = GetIt.instance;
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'core/core.dart';
-import 'features/arb_management/arb_management.dart';
+import 'package:rosetta/core/core.dart';
+import 'package:rosetta/features/features.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

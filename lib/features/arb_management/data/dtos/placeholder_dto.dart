@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-import '../../domain/entities/arb_placeholder.dart';
+import 'package:rosetta/features/features.dart';
 
 part 'placeholder_dto.mapper.dart';
 

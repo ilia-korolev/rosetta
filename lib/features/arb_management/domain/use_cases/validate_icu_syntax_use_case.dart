@@ -1,12 +1,4 @@
-import '../entities/arb_entry.dart';
-import '../entities/arb_entry_type.dart';
-import '../entities/arb_placeholder.dart';
-import '../entities/icu_case.dart';
-import '../entities/icu_validation_result.dart';
-import '../entities/validation_error.dart';
-
-import '../entities/validation_suggestion.dart';
-import '../entities/validation_warning.dart';
+import 'package:rosetta/features/features.dart';
 
 /// Use case for validating ICU message format syntax
 class ValidateIcuSyntaxUseCase {

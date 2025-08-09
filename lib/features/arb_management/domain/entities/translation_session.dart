@@ -1,6 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
-import 'arb_file.dart';
-import 'arb_entry.dart';
+import 'package:rosetta/features/features.dart';
 
 part 'translation_session.mapper.dart';
 

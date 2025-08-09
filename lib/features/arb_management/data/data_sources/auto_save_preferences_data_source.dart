@@ -1,4 +1,4 @@
-import '../../../../core/data_sources/preferences_data_source.dart';
+import 'package:rosetta/core/core.dart';
 
 /// Data source for managing auto-save preferences
 abstract class AutoSavePreferencesDataSource {

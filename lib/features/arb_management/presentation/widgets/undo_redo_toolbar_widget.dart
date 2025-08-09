@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../bloc/translation_editor_bloc.dart';
+import 'package:rosetta/features/features.dart';
 
 /// Toolbar widget for undo/redo operations
 class UndoRedoToolbarWidget extends StatelessWidget {

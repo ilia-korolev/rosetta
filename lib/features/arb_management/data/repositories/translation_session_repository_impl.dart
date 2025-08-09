@@ -3,11 +3,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
-import '../../domain/entities/arb_file.dart';
-import '../../domain/entities/translation_session.dart';
-import '../../domain/repositories/translation_session_repository.dart';
-import '../data_sources/auto_save_preferences_data_source.dart';
-import '../dtos/arb_file_dto.dart';
+import 'package:rosetta/features/features.dart';
 
 /// Implementation of translation session repository
 class TranslationSessionRepositoryImpl implements TranslationSessionRepository {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../bloc/translation_editor_bloc.dart';
+import 'package:rosetta/features/features.dart';
 
 /// Widget that displays tabs for each imported ARB file
 class FileTabsWidget extends StatelessWidget {

@@ -1,5 +1,4 @@
-import '../entities/arb_file.dart';
-import '../entities/validation_result.dart';
+import 'package:rosetta/features/features.dart';
 
 /// Repository interface for ARB file operations
 abstract class ArbFileRepository {

@@ -1,6 +1,4 @@
-import 'validation_error.dart';
-import 'validation_suggestion.dart';
-import 'validation_warning.dart';
+import 'package:rosetta/features/features.dart';
 
 /// Validation result for ARB operations
 class ValidationResult {

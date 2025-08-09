@@ -1,11 +1,7 @@
 import 'dart:io';
 import 'package:path/path.dart' as path;
 
-import '../../domain/entities/arb_file.dart';
-import '../../domain/entities/validation_result.dart';
-import '../../domain/repositories/arb_file_repository.dart';
-import '../data_sources/arb_file_data_source.dart';
-import '../data_sources/recent_files_data_source.dart';
+import 'package:rosetta/features/features.dart';
 
 /// Implementation of ARB file repository
 class ArbFileRepositoryImpl implements ArbFileRepository {

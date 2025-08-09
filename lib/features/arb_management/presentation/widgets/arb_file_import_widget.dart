@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:file_picker/file_picker.dart';
 
-import '../bloc/arb_import_bloc.dart';
+import 'package:rosetta/features/features.dart';
 
 /// Widget for importing ARB files
 class ArbFileImportWidget extends StatefulWidget {

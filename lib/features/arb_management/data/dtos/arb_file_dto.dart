@@ -2,11 +2,7 @@ import 'dart:convert';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:path/path.dart' as path;
 
-import '../../domain/entities/arb_file.dart';
-import '../../domain/entities/arb_entry.dart';
-import '../../domain/use_cases/parse_icu_message_use_case.dart';
-import 'arb_entry_metadata_dto.dart';
-import 'placeholder_dto.dart';
+import 'package:rosetta/features/features.dart';
 
 part 'arb_file_dto.mapper.dart';
 

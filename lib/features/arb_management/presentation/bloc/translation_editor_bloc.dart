@@ -1,15 +1,7 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../domain/entities/arb_entry.dart';
-import '../../domain/entities/arb_entry_type.dart';
-import '../../domain/entities/arb_file.dart';
-import '../../domain/entities/icu_validation_result.dart';
-import '../../domain/entities/translation_session.dart';
-import '../../domain/repositories/arb_file_repository.dart';
-import '../../domain/repositories/translation_session_repository.dart'
-    as session_repo;
-import '../../domain/use_cases/validate_icu_syntax_use_case.dart';
+import 'package:rosetta/features/features.dart';
 
 part 'translation_editor_bloc.mapper.dart';
 
@@ -256,7 +248,7 @@ class TranslationEditorBloc
     extends Bloc<TranslationEditorEvent, TranslationEditorState> {
   TranslationEditorBloc({
     required ArbFileRepository arbFileRepository,
-    required session_repo.TranslationSessionRepository sessionRepository,
+    required TranslationSessionRepository sessionRepository,
     required ValidateIcuSyntaxUseCase validateIcuSyntaxUseCase,
   }) : _arbFileRepository = arbFileRepository,
        _sessionRepository = sessionRepository,
@@ -278,7 +270,7 @@ class TranslationEditorBloc
   }
 
   final ArbFileRepository _arbFileRepository;
-  final session_repo.TranslationSessionRepository _sessionRepository;
+  final TranslationSessionRepository _sessionRepository;
   final ValidateIcuSyntaxUseCase _validateIcuSyntaxUseCase;
 
   /// Handle session initialization

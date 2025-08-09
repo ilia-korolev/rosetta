@@ -1,5 +1,5 @@
 import 'dart:io';
-import '../../../../core/data_sources/preferences_data_source.dart';
+import 'package:rosetta/core/core.dart';
 
 /// Data source for managing recent files
 abstract class RecentFilesDataSource {

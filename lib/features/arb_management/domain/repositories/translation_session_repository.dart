@@ -1,4 +1,4 @@
-import '../entities/translation_session.dart';
+import 'package:rosetta/features/features.dart';
 
 /// Repository interface for translation session operations
 abstract class TranslationSessionRepository {
