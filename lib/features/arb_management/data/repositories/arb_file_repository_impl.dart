@@ -1,20 +1,18 @@
 import 'dart:io';
 import 'package:path/path.dart' as path;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/entities/arb_file.dart';
 import '../../domain/entities/validation_result.dart';
 import '../../domain/repositories/arb_file_repository.dart';
 import '../data_sources/arb_file_data_source.dart';
+import '../data_sources/recent_files_data_source.dart';
 
 /// Implementation of ARB file repository
 class ArbFileRepositoryImpl implements ArbFileRepository {
-  const ArbFileRepositoryImpl(this._dataSource);
+  const ArbFileRepositoryImpl(this._dataSource, this._recentFilesDataSource);
 
   final ArbFileDataSource _dataSource;
-
-  static const String _recentFilesKey = 'recent_arb_files';
-  static const int _maxRecentFiles = 10;
+  final RecentFilesDataSource _recentFilesDataSource;
 
   @override
   Future<ArbFile> importFromFile(String filePath) async {
@@ -74,50 +72,12 @@ class ArbFileRepositoryImpl implements ArbFileRepository {
 
   @override
   Future<List<String>> getRecentFiles() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final recentFiles = prefs.getStringList(_recentFilesKey) ?? <String>[];
-
-      // Filter out files that no longer exist
-      final existingFiles = <String>[];
-      for (final filePath in recentFiles) {
-        if (await File(filePath).exists()) {
-          existingFiles.add(filePath);
-        }
-      }
-
-      // Update preferences if some files were removed
-      if (existingFiles.length != recentFiles.length) {
-        await prefs.setStringList(_recentFilesKey, existingFiles);
-      }
-
-      return existingFiles;
-    } catch (e) {
-      return <String>[];
-    }
+    return _recentFilesDataSource.getRecentFiles();
   }
 
   @override
   Future<void> addToRecentFiles(String filePath) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final recentFiles = prefs.getStringList(_recentFilesKey) ?? <String>[];
-
-      // Remove if already exists to avoid duplicates
-      recentFiles.remove(filePath);
-
-      // Add to the beginning
-      recentFiles.insert(0, filePath);
-
-      // Keep only the maximum number of recent files
-      if (recentFiles.length > _maxRecentFiles) {
-        recentFiles.removeRange(_maxRecentFiles, recentFiles.length);
-      }
-
-      await prefs.setStringList(_recentFilesKey, recentFiles);
-    } catch (e) {
-      // Ignore errors when saving recent files
-    }
+    await _recentFilesDataSource.addRecentFile(filePath);
   }
 
   @override

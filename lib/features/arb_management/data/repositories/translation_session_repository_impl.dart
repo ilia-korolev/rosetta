@@ -2,19 +2,20 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/entities/arb_file.dart';
 import '../../domain/entities/translation_session.dart';
 import '../../domain/repositories/translation_session_repository.dart';
+import '../data_sources/auto_save_preferences_data_source.dart';
 import '../dtos/arb_file_dto.dart';
 
 /// Implementation of translation session repository
 class TranslationSessionRepositoryImpl implements TranslationSessionRepository {
-  const TranslationSessionRepositoryImpl();
+  const TranslationSessionRepositoryImpl(this._autoSavePreferencesDataSource);
+
+  final AutoSavePreferencesDataSource _autoSavePreferencesDataSource;
 
   static const Duration _defaultAutoSaveInterval = Duration(minutes: 5);
-  static const String _autoSaveIntervalKey = 'auto_save_interval_minutes';
 
   @override
   Future<void> saveSession(TranslationSession session) async {
@@ -156,11 +157,9 @@ class TranslationSessionRepositoryImpl implements TranslationSessionRepository {
   /// Get auto-save interval from preferences (async version)
   Future<Duration> getAutoSaveIntervalAsync() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final minutes =
-          prefs.getInt(_autoSaveIntervalKey) ??
-          _defaultAutoSaveInterval.inMinutes;
-      return Duration(minutes: minutes);
+      final minutes = await _autoSavePreferencesDataSource
+          .getAutoSaveIntervalMinutes();
+      return Duration(minutes: minutes ?? _defaultAutoSaveInterval.inMinutes);
     } catch (e) {
       return _defaultAutoSaveInterval;
     }
@@ -168,12 +167,9 @@ class TranslationSessionRepositoryImpl implements TranslationSessionRepository {
 
   @override
   Future<void> setAutoSaveInterval(Duration interval) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt(_autoSaveIntervalKey, interval.inMinutes);
-    } catch (e) {
-      // Ignore errors when saving preferences
-    }
+    await _autoSavePreferencesDataSource.setAutoSaveIntervalMinutes(
+      interval.inMinutes,
+    );
   }
 
   /// Serialize files map to JSON
